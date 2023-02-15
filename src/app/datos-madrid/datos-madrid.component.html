@@ -1,0 +1,102 @@
+<body>
+  <br />
+  <br />
+  <!--Título de la aplicación-->
+  <div id="titulo">
+    <h1 class="h1">
+      <strong
+        >Buscador de
+        <span style="color: rgb(11, 26, 226)">salas de estudio</span> en la
+        ciudad de <span style="color: rgb(11, 26, 226)">Madrid</span></strong
+      >
+    </h1>
+  </div>
+  <br />
+  <!--Imágen de la bandera del ayuntamiento de  madrid-->
+  <img src="./assets/imagenes/banderaciudad.png" alt="bandera" />
+  <br />
+  <div id="principal">
+    <h4><strong>Introduzca el código postal del barrio que desee: </strong></h4>
+    <br />
+    <!--Caja de texto-->
+    <input
+      width="10px"
+      type="text"
+      placeholder="Código postal"
+      [(ngModel)]="codigopostal"
+    />
+    <br />
+    <br />
+    <!--Botón para buscar códigos postales-->
+    <button type="submit" class="btn btn-primary" (click)="obtenerDatos()">
+      Buscar
+    </button>
+    <br />
+    <br />
+    <p>
+      Se han obtenido <strong>{{ contador }}</strong> resultado/s
+      <br />
+      (Después de introducir el código postal, debajo del mapa aparecerá más
+      información)
+    </p>
+
+    <br />
+    <!--Mapa de google maps donde se mostrarán las ubicaciones de las salas-->
+    <div id="mapa">
+      <google-map
+        width="300px"
+        height="300px"
+        [center]="position"
+        [zoom]="zoom"
+      >
+        <!--Marcadores del mapa con las ubicaciones y los nombres de las salas como etiquetas-->
+        <map-marker [position]="position" [label]="label"> </map-marker>
+        <map-marker
+          *ngFor="let localizacion of localizaciones"
+          [position]="localizacion"
+          [label]="localizacion.label"
+        ></map-marker>
+      </google-map>
+    </div>
+  </div>
+  <!--Creación de la/s tabla/s con todos los datos-->
+  <div class="container">
+    <div *ngIf="datos && datos.length && datos.length > 0" id="contenedor">
+      <div *ngFor="let dato of datos" id="tablas" class="table-responsive">
+        <table class="table table-dark table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Nombre Sala</th>
+              <th scope="col">
+                URL<br />
+                (al acceder encontrará el número de teléfono)
+              </th>
+              <th scope="col">Dirección</th>
+              <th scope="col">Código Postal</th>
+              <th scope="col">Comunicación</th>
+              <th scope="col">Capacidad</th>
+              <th scope="col">Horarios</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{ dato["title"] }}</td>
+              <td>
+                <a [href]="dato.relation" target="_blank"
+                  ><span style="color: white">{{ dato["relation"] }}</span></a
+                >
+              </td>
+              <td>{{ dato["address"]["street-address"] }}</td>
+              <td class="table-warning">
+                {{ dato["address"]["postal-code"] }}
+              </td>
+              <td>{{ dato["organization"]["organization-desc"] }}</td>
+              <td>{{ dato["organization"]["services"] }}</td>
+              <td>{{ dato["organization"]["schedule"] }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</body>
